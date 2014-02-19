@@ -1,57 +1,57 @@
-# Convert netCDF4 to stacked dataframe
+# Convert netCDF4 4-dimensional temperature data to 2-dimensional stacked dataframe
 # By: Matt Bartos
+
+# This script is intended for use with CMIP3 and CMIP5 climate projection data. In this example, maximum daily temperature data is converted from a 4-dimensional netCDF dataset (where each temperature entry is indexed by 3 other variables: lat, lon and time) to a 2-dimensional pandas dataframe (where each temperature entry is indexed by a single integer, corresponding to a tuple of lat, lon and time).
 
 import numpy as np
 import pandas as pd
 import netCDF4
 	
-#Import netcdf dataset
+# Import netcdf dataset
 
 f_max = netCDF4.Dataset('Extraction_tasmax.nc', 'r')
-f_min = netCDF4.Dataset('Extraction_tasmin.nc', 'r')
 
-#netcdf -> 3-d panel -> stacked dataframe
-#tasmax
+# Separate projection scenarios into a list of 3-dimensional panels. Each object in lst_tasmax represents a different projection scenario (0-53).
 
 lst_tasmax = []
-lst_tasmin = []
 
-def pop_tasmax(v):
-	for i in range(0,v):
+def pop_tasmax(k,v):
+	for i in range(k,v):
 		lst_tasmax.append(pd.Panel(f_max.variables['tasmax'][i][:], items=f_max.variables['time'][:], major_axis=f_max.variables['lat'], minor_axis=f_max.variables['lon'][:]))
 return lst_tasmax
 
-pop_tasmax(3)
-		
-print lst_tasmax
+pop_tasmax(0,3)
+
+# Convert 3-dimensional panels to 2-dimensional dataframes
 
 df_lst_tasmax = []
-df_lst_tasmin = []
 
-def df_tasmax(v):
-	for i in range(0,v):
+def df_tasmax(k,v):
+	for i in range(k,v):
 		df_lst_tasmax.append(lst_tasmax[i].to_frame())
 return df_lst_tasmax
 
-df_tasmax(3)
+df_tasmax(0,3)
+
+# Stack dataframe to create hierarchical index
 
 stack_lst_tasmax = []
-stack_lst_tasmin = []
 
-def stack_tasmax(v):
-	for i in range(0,v):
+def stack_tasmax(k,v):
+	for i in range(k,v):
 		stack_lst_tasmax.append(df_lst_tasmax[i].stack())
 return stack_lst_tasmax
 
-stack_tasmax(3)
+stack_tasmax(0,3)
+
+# Flatten hierarchical index, indexing each temperature reading to a single integer. Define column names, allowing merge and concatenation operations.
 
 flat_lst_tasmax = []
-flat_lst_tasmin = []
 
-def flatten_tasmax(v):
-	for i in range(0,v):
+def flatten_tasmax(k,v):
+	for i in range(k,v):
 		flat_lst_tasmax.append(stack_lst_tasmax[i].reset_index())
 		flat_lst_tasmax[i].columns = ['lat', 'lon', 'time', 'tmax%s' % (i)]
 return flat_lst_tasmax
 
-flatten_tasmax(3)
+flatten_tasmax(0,3)
