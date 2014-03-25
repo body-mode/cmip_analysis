@@ -715,7 +715,7 @@ EHE_gfdl_esm2g_45.to_csv('EHE_gfdl_esm2g_45.csv')
 sel(gfdl_esm2g_60)
 
 EHE_gfdl_esm2g_60 = gfdl_esm2g_60.ix[sorted(set(crit))]
-EHE_gfdl_esm2g_60.to_csv('EHE_gfdl_esm2g_60_2.csv')
+EHE_gfdl_esm2g_60.to_csv('EHE_gfdl_esm2g_60.csv')
 
 sel(gfdl_esm2g_85)
 
