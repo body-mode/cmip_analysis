@@ -622,6 +622,16 @@ del la_T2['tmax']
 
 phx_T1['latlon'] = phx_T1[['latitude', 'longitude']].apply(tuple, axis=1)
 phx_T2['latlon'] = phx_T2[['latitude', 'longitude']].apply(tuple, axis=1)
+del phx_T1['latitude']
+del phx_T1['longitude']
+del phx_T1['Unnamed: 0']
+del phx_T2['latitude']
+del phx_T2['longitude']
+del phx_T2['Unnamed: 0']
+phx_T1['t1'] = phx_T1['tmax']
+del phx_T1['tmax']
+phx_T2['t2'] = phx_T2['tmax']
+del phx_T2['tmax']
 
 #9. Prepare projections
 
@@ -707,17 +717,27 @@ sel(gfdl_esm2g_26)
 EHE_gfdl_esm2g_26 = gfdl_esm2g_26.ix[sorted(set(crit))]
 EHE_gfdl_esm2g_26.to_csv('EHE_gfdl_esm2g_26.csv')
 
+crit = []
+
 sel(gfdl_esm2g_45)
 
 EHE_gfdl_esm2g_45 = gfdl_esm2g_45.ix[sorted(set(crit))]
 EHE_gfdl_esm2g_45.to_csv('EHE_gfdl_esm2g_45.csv')
+
+crit = []
 
 sel(gfdl_esm2g_60)
 
 EHE_gfdl_esm2g_60 = gfdl_esm2g_60.ix[sorted(set(crit))]
 EHE_gfdl_esm2g_60.to_csv('EHE_gfdl_esm2g_60.csv')
 
+crit = []
+
 sel(gfdl_esm2g_85)
 
 EHE_gfdl_esm2g_85 = gfdl_esm2g_85.ix[sorted(set(crit))]
 EHE_gfdl_esm2g_85.to_csv('EHE_gfdl_esm2g_85.csv')
+
+crit = []
+
+store2.close()
